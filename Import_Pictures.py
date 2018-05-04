@@ -29,7 +29,6 @@ def merge_img(base_photo, nadir):
     width2, height2 = nad.size
     final_pic = final_pic.resize(((width),(height)),0)
     final_pic.paste(merge_im)
-    return final_pic
 
 root = Tk()
 
