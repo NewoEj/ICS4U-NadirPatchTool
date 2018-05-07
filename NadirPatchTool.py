@@ -16,9 +16,6 @@ def choose_nadir():
 
 def choose_save_destination():
     save_destination = filedialog.askdirectory()
-    
-
-    
 
 mainframe = ttk.Frame(root, padding="10")
 mainframe.columnconfigure(0, weight=1)
