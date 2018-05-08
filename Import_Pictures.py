@@ -7,10 +7,10 @@ from PIL import ImageTk
 import os
 
 def import_image(base_photo):
-    base_photo.set(filedialog.askopenfilename(filetypes=(("jpeg files","*.jpg"),("all files","*.*"))))
+    base_photo.set(filedialog.askopenfilename())
 
 def import_nadir(nadir):
-    nadir.set(filedialog.askopenfilename(filetypes=(("jpeg files","*.jpg"),("all files","*.*"))))
+    nadir.set(filedialog.askopenfilename())
     
 def save_loc(save_location):
     save_location.set(filedialog.askdirectory())
