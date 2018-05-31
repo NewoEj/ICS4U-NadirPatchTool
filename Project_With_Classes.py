@@ -27,18 +27,21 @@ class tkinter_edit(ttk.Frame):
                 self.name = ""
         
             def find_name(self):
-                self.name = filedialog.askopenfilename()
-                self.pic = Image.open(self.name)
-                self.dim_x, self.dim_y = self.pic.size
+                try:
+                    self.name = filedialog.askopenfilename()
+                    self.pic = Image.open(self.name)
+                    self.dim_x, self.dim_y = self.pic.size
+                except:
+                    Error_Message()
 
             def give_name(self):
                 return self.name        
             
             def make_tkImage(self,wide, high):
-                self.pic.thumbnail((wide, high), Image.BICUBIC)
-                self.dim_x, self.dim_y = self.pic.size
-                tkImage = ImageTk.PhotoImage(self.pic)
-                return tkImage
+                    self.pic = self.pic.resize((wide, high), Image.BICUBIC)
+                    self.dim_x, self.dim_y = self.pic.size
+                    tkImage = ImageTk.PhotoImage(self.pic)
+                    return tkImage
 
         self.base_photo = photo()
         self.nadir = photo()
@@ -68,34 +71,44 @@ class tkinter_edit(ttk.Frame):
         
 class edit_frame(Toplevel):
     def __init__(self, base_photo, nadir, save):
-        self.save_location = save
-        self.base = base_photo.make_tkImage(1000,500)
-        self.nad = nadir.make_tkImage(100,50)        
-        self.edit = Toplevel()
-        self.edit.title("Edit Photo")
-        self.editor = Canvas(self.edit,width = base_photo.dim_x, height = base_photo.dim_y)
-        self.editor.pack(expand = 1, fill = BOTH)
-        self.old_x = base_photo.dim_x/2
-        self.old_y = base_photo.dim_y/2
-        self.i = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y/2, image = self.base)
-        self.p = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y/2, image = self.nad)
-        self.editor.bind("<Button 1>", self.new_coord)
-        self.edit.bind('s', self.save_canvas)
+        try:
+            self.save_location = save
+            self.base = base_photo.make_tkImage(1000,500)
+            self.nad = nadir.make_tkImage(1000,500)        
+            self.edit = Toplevel()
+            self.edit.title("Edit Photo")
+            self.menu_bar = Menu(self.edit)
+            self.menu_bar.add_command(label="Save", command =self.save_canvas)
+            self.edit.config(menu = self.menu_bar)
+            self.editor = Canvas(self.edit,width = base_photo.dim_x, height = base_photo.dim_y)
+            self.editor.pack(expand = 1, fill = BOTH)
+            self.i = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y/2, image = self.base)
+            self.p = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y - base_photo.dim_y/2, image = self.nad)
+        except:
+            Error_Message()
         
-    def new_coord(self, eventorigin):
-        self.new_x = eventorigin.x
-        self.new_y = eventorigin.y
-        self.x = self.new_x - self.old_x 
-        self.y = self.new_y - self.old_y 
-        self.editor.move(self.p,self.x,self.y)
-        self.old_y = self.new_y
-        self.old_x = self.new_x
         
-    def save_canvas(self,eventorigin):
+    def save_canvas(self):
         self.editor.postscript(file = "finish")
         img = Image.open("finish")
         filename = filedialog.asksaveasfilename(defaultextension = ".jpg")
-        img.save(filename)
+        try:
+            img.save(filename)
+        except:
+            Error_Message()
+            
+class Error_Message(Toplevel):
+    def __init__(self):
+        self.error_screen = Toplevel()
+        self.error_screen.title("Error")
+        self.x = (self.error_screen.winfo_screenwidth() / 2) - 100
+        self.y = (self.error_screen.winfo_screenheight() / 2) -25
+        self.error_screen.geometry('%dx%d+%d+%d' % (200,50, self.x,self.y))
+        self.error_message = ttk.Label(self.error_screen, text = "Invalid Option")
+        self.error_message.config(font=("Times New Romans",25))
+        self.error_message.pack()
+        self.error_screen.grab_set()
+        self.error_screen.focus()
         
 if __name__ == "__main__":
     root = Tk()
