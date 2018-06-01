@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import messagebox
 from PIL import Image
 from PIL import ImageGrab
 from PIL import ImageTk
@@ -80,7 +81,7 @@ class edit_frame(Toplevel):
             self.edit = Toplevel()
             self.edit.title("Edit Photo")
             self.menu_bar = Menu(self.edit)
-            self.menu_bar.add_command(label="Save", command =self.save_canvas)
+            self.menu_bar.add_command(label="Save", command=self.save_canvas)
             self.edit.config(menu = self.menu_bar)
             self.editor = Canvas(self.edit,width = base_photo.dim_x, height = base_photo.dim_y)
             self.editor.pack(expand = 1, fill = BOTH)
@@ -101,16 +102,7 @@ class edit_frame(Toplevel):
             
 class Error_Message(Toplevel):
     def __init__(self):
-        self.error_screen = Toplevel()
-        self.error_screen.title("Error")
-        self.x = (self.error_screen.winfo_screenwidth() / 2) - 100
-        self.y = (self.error_screen.winfo_screenheight() / 2) -25
-        self.error_screen.geometry('%dx%d+%d+%d' % (200,50, self.x,self.y))
-        self.error_message = ttk.Label(self.error_screen, text = "Invalid Option")
-        self.error_message.config(font=("Times New Romans",25))
-        self.error_message.pack()
-        self.error_screen.grab_set()
-        self.error_screen.focus()
+        self.error_message = messagebox.showinfo(title="Error", message="Invalid Option")
         
 if __name__ == "__main__":
     root = Tk()
