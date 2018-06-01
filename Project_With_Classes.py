@@ -49,17 +49,19 @@ class tkinter_edit(ttk.Frame):
         self.save_name = ""
         self.final_pic = photo()
                
-        self.master = ttk.Frame(parent, padding = "3 3 12 12")
-        self.master.grid(column=0, row=0, sticky=(N, W, E, S))
+        self.master = ttk.Frame(parent, padding = "10")
+        self.master.grid(column=0, row=0)
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
         
-        ttk.Button(self.master, text = "Select Base Photo", command = lambda: self.base_photo.find_name()).grid(column=0, row=0, sticky = W)        
-        ttk.Button(self.master, text = "Select Nadir", command = lambda: self.nadir.find_name()).grid(column=0,row=1,sticky=W)
-        ttk.Button(self.master, text = "Edit Pictures", command = lambda: self.edit_photo()).grid(column=0,row=3,sticky=W)
+        ttk.Button(self.master, text = "Select Photosphere", command = lambda: self.base_photo.find_name()).grid(column=0,row=1,pady=10)        
+        ttk.Button(self.master, text = "Select Nadir", command = lambda: self.nadir.find_name()).grid(column=0,row=2,pady=10)
+        ttk.Button(self.master, text = "Edit Pictures", command = lambda: self.edit_photo()).grid(column=0,row=3,pady=10)
+        ttk.Button(self.master, text = "Quit Program", command = exit).grid(column=0,row=4,padx=10,pady=10)
         
-        ttk.Label(self.master, textvariable = self.base_photo.name).grid(column=1, row=0, sticky = W)
-        ttk.Label(self.master, textvariable = self.nadir.name).grid(column=1, row=1, sticky=W)
+        ttk.Label(self.master, textvariable = self.base_photo.name).grid(column=1, row=1, sticky = W)
+        ttk.Label(self.master, textvariable = self.nadir.name).grid(column=1, row=2, sticky=W)
+        ttk.Label(self.master, text = "Nadir Patch Tool", font=("Arial", 20)).grid(column=0,row=0)
 
            
     def new_photo(self,name):
@@ -112,6 +114,7 @@ class Error_Message(Toplevel):
         
 if __name__ == "__main__":
     root = Tk()
+    root.title("Nadir Patch Tool")
     tkinter_edit(root)
     root.mainloop()
 
