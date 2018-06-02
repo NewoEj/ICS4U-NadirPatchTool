@@ -57,7 +57,7 @@ class tkinter_edit(ttk.Frame):
         
         ttk.Button(self.master, text = "Select Photosphere", command = lambda: self.base_photo.find_name()).grid(column=0,row=1,pady=10)        
         ttk.Button(self.master, text = "Select Nadir", command = lambda: self.nadir.find_name()).grid(column=0,row=2,pady=10)
-        ttk.Button(self.master, text = "Edit Pictures", command = lambda: self.edit_photo()).grid(column=0,row=3,pady=10)
+        ttk.Button(self.master, text = "Preview", command = lambda: self.edit_photo()).grid(column=0,row=3,pady=10)
         ttk.Button(self.master, text = "Quit Program", command = exit).grid(column=0,row=4,padx=10,pady=10)
         
         ttk.Label(self.master, textvariable = self.base_photo.name).grid(column=1, row=1, sticky = W)
@@ -70,9 +70,9 @@ class tkinter_edit(ttk.Frame):
     
     def edit_photo(self):
         new_path = os.path.join(self.save, self.save_name)
-        self.app = edit_frame(self.base_photo, self.nadir, new_path) 
+        self.app = preview(self.base_photo, self.nadir, new_path) 
         
-class edit_frame(Toplevel):
+class preview(Toplevel):
     def __init__(self, base_photo, nadir, save):
         try:
             self.save_location = save
