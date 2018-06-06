@@ -3,19 +3,17 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image
-from PIL import ImageGrab
 from PIL import ImageTk
-import os
-
 
 
 class tkinter_edit(ttk.Frame):
     """Has the Attributes:
     
+    Base_Photo
+    Nadir
+    
     
     """
-    
-
     
     def __init__(self,parent):
         class photo(object):
@@ -23,6 +21,7 @@ class tkinter_edit(ttk.Frame):
 
             Image Name
             Size
+            
             """
             def __init__(self):
                 self.name = ""
@@ -33,22 +32,18 @@ class tkinter_edit(ttk.Frame):
                     self.pic = Image.open(self.name)
                     self.dim_x, self.dim_y = self.pic.size
                 except:
-                    Error_Message()
-
-            def give_name(self):
-                return self.name        
+                    Error_Message()       
             
             def make_tkImage(self,wide, high):
-                    self.pic = self.pic.resize((wide, high), Image.BICUBIC)
-                    self.dim_x, self.dim_y = self.pic.size
-                    tkImage = ImageTk.PhotoImage(self.pic)
-                    return tkImage
+                self.pic = self.pic.resize((wide, high), Image.BICUBIC)
+                tkImage = ImageTk.PhotoImage(self.pic)
+                return tkImage
+            
+            def resize_image(self,wide, high):
+                self.pic = self.pic.resize((wide,high), Image.BICUBIC)
 
         self.base_photo = photo()
         self.nadir = photo()
-        self.save = ""
-        self.save_name = ""
-        self.final_pic = photo()
                
         self.master = ttk.Frame(parent, padding = "10")
         self.master.grid(column=0, row=0)
@@ -57,48 +52,41 @@ class tkinter_edit(ttk.Frame):
         
         ttk.Button(self.master, text = "Select Photosphere", command = lambda: self.base_photo.find_name()).grid(column=0,row=1,pady=10)        
         ttk.Button(self.master, text = "Select Nadir", command = lambda: self.nadir.find_name()).grid(column=0,row=2,pady=10)
-        ttk.Button(self.master, text = "Preview", command = lambda: self.edit_photo()).grid(column=0,row=3,pady=10)
-        ttk.Button(self.master, text = "Quit Program", command = exit).grid(column=0,row=4,padx=10,pady=10)
+        ttk.Button(self.master, text = "Preview", command = lambda: self.preview_photo()).grid(column=0,row=3,pady=10)
+        ttk.Button(self.master, text = "Save", command = lambda: self.save_photo()).grid(column=0,row=4,pady=10)
+        ttk.Button(self.master, text = "Quit Program", command = exit).grid(column=0,row=5,padx=10,pady=10)
         
         ttk.Label(self.master, textvariable = self.base_photo.name).grid(column=1, row=1, sticky = W)
         ttk.Label(self.master, textvariable = self.nadir.name).grid(column=1, row=2, sticky=W)
         ttk.Label(self.master, text = "Nadir Patch Tool", font=("Arial", 20)).grid(column=0,row=0)
-
-           
-    def new_photo(self,name):
-        name = photo()
     
-    def edit_photo(self):
-        new_path = os.path.join(self.save, self.save_name)
-        self.app = preview(self.base_photo, self.nadir, new_path) 
+    def preview_photo(self):
+        self.app = Preview_360(self.base_photo, self.nadir)
         
-class preview(Toplevel):
-    def __init__(self, base_photo, nadir, save):
+    def save_photo(self):
+        self.base_photo.resize_image(self.base_photo.dim_x,self.base_photo.dim_y)
+        self.nadir.resize_image(self.base_photo.dim_x, self.base_photo.dim_y)
+        self.base_photo.pic.paste(self.nadir.pic,(0,0),self.nadir.pic)
+        filename = filedialog.asksaveasfilename(defaultextension = ".jpg")
         try:
-            self.save_location = save
+            self.base_photo.pic.save(filename)
+        except:
+            Error_Message()        
+          
+class Preview_360(Toplevel):
+    def __init__(self, base_photo, nadir):
+        try:
             self.base = base_photo.make_tkImage(1000,500)
             self.nad = nadir.make_tkImage(1000,500)        
             self.edit = Toplevel()
-            self.edit.title("Edit Photo")
-            self.menu_bar = Menu(self.edit)
-            self.menu_bar.add_command(label="Save", command=self.save_canvas)
-            self.edit.config(menu = self.menu_bar)
-            self.editor = Canvas(self.edit,width = base_photo.dim_x, height = base_photo.dim_y)
+            self.edit.title("Preview Photo")
+            self.editor = Canvas(self.edit,width = 1000, height = 500)
             self.editor.pack(expand = 1, fill = BOTH)
-            self.i = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y/2, image = self.base)
-            self.p = self.editor.create_image(base_photo.dim_x/2, base_photo.dim_y - base_photo.dim_y/2, image = self.nad)
+            self.i = self.editor.create_image(500, 250, image = self.base)
+            self.p = self.editor.create_image(500, 250, image = self.nad)
         except:
             Error_Message()
         
-        
-    def save_canvas(self):
-        self.editor.postscript(file = "finish")
-        img = Image.open("finish")
-        filename = filedialog.asksaveasfilename(defaultextension = ".jpg")
-        try:
-            img.save(filename)
-        except:
-            Error_Message()
             
 class Error_Message(Toplevel):
     def __init__(self):
