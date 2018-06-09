@@ -39,31 +39,20 @@ class Editor_360(ttk.Frame):
         self.nadir = self.nadir.resize(self.photosphere.size, resample=0)
     
     def preview_photo(self):
-        self.preview_app = Preview_360(self.photosphere_path, self.nadir_path)
-            
+        try:
+            photosphere = Image.open(self.photosphere_path)
+            nad = Image.open(self.nadir_path)
+            nad = nad.resize(photosphere.size,resample=0)
+            photosphere.paste(nad,(0,0),nad)
+            photosphere.show()
+        except:
+            Error_Message()
+
     def patch(self):
         self.save_destination = filedialog.asksaveasfilename(defaultextension = ".jpg")
         self.photosphere.paste(self.nadir,(0,0),self.nadir)
         self.photosphere.save(self.save_destination)
         messagebox.showinfo(title="Program complete.", message="The photosphere has been patched and saved.")
-
-class Preview_360(Toplevel):
-    def __init__(self, photosphere_path, nadir_path):
-        try:
-            self.photosphere = Image.open(photosphere_path)
-            self.nadir = Image.open(nadir_path)
-            self.photosphere = self.photosphere.resize((1000, 500), Image.BICUBIC)
-            self.nadir = self.nadir.resize((1000, 500), Image.BICUBIC)
-            self.photosphere_tk = ImageTk.PhotoImage(self.photosphere)
-            self.nadir_tk = ImageTk.PhotoImage(self.nadir)
-            self.preview = Toplevel()
-            self.preview.title("Photosphere Preview")
-            self.previewer = Canvas(self.preview, width = 1000, height = 500)
-            self.previewer.pack(expand = 1, fill = BOTH)
-            self.previewer.create_image(500, 250, image = self.photosphere_tk)
-            self.previewer.create_image(500, 250, image = self.nadir_tk)
-        except:
-            Error_Message()
 
 class Error_Message(Toplevel):
     def __init__(self):
