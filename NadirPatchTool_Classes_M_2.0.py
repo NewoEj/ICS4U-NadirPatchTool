@@ -1,10 +1,14 @@
+# Imports necessary tkinter modules
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 import tkinter as tk
+
+# Imports module necessary to determine the type of image
 import imghdr
 
+# Imports the necessary PIL modules
 from PIL import Image
 from PIL import ImageTk
 
@@ -14,70 +18,102 @@ class Editor_360(ttk.Frame):
         
         self.photosphere = Image.Image._new
         self.nadir = Image.Image._new
-        
+
+        # Creates the GUI
         mainframe = ttk.Frame(parent, padding="10")
         mainframe.columnconfigure(0, weight=1)
         mainframe.rowconfigure(0, weight=1)
-        one = ttk.Button(mainframe, text='Choose the photosphere to be patched.', command=self.choose_photosphere).grid(column=0, row=1, padx=10, pady=10)
-        two = ttk.Button(mainframe, text='Choose the nadir to be used.', command=self.choose_nadir).grid(column=0, row=2, padx=10, pady=10)
-        four = ttk.Button(mainframe, text='Preview Edited Photosphere', command = self.preview_photo).grid(column=0, row=4,padx=10,pady=10)
-        five = ttk.Button(mainframe, text='Quit.', command=exit).grid(column=0, row=6, padx=10, pady=10)
-        six = ttk.Button(mainframe, text='Patch photosphere.', command=self.resize_and_patch).grid(column=0, row=5, padx=10, pady=10)
-        seven = ttk.Label(mainframe, text='Nadir Patch Tool', font=("Arial", 20)).grid(column=0, row=0)
-        
+
+        # Creates the buttons and labels
+        ttk.Button(mainframe, text='Choose the photosphere to be patched.', command=self.choose_photosphere).grid(column=0, row=1, padx=10, pady=10)
+        ttk.Button(mainframe, text='Choose the nadir to be used.', command=self.choose_nadir).grid(column=0, row=2, padx=10, pady=10)
+        ttk.Button(mainframe, text='Preview Edited Photosphere', command = self.preview_photo).grid(column=0, row=4,padx=10,pady=10)
+        ttk.Button(mainframe, text='Quit.', command=exit).grid(column=0, row=6, padx=10, pady=10)
+        ttk.Button(mainframe, text='Patch photosphere.', command=self.resize_and_patch).grid(column=0, row=5, padx=10, pady=10)
+        ttk.Label(mainframe, text='Nadir Patch Tool', font=("Arial", 20)).grid(column=0, row=0)
+
+        # Allows the buttons and labels to be organized
         mainframe.grid(column=0, row=0)
         
     def choose_photosphere(self):
+        # Opens a selection box for the user to choose the photosphere that will be patched
         self.photosphere_path = filedialog.askopenfilename()
         
     def choose_nadir(self):
+        # Opens a selection box for the user to choose the nadir that will be applied to the photosphere
         self.nadir_path = filedialog.askopenfilename()
     
     def preview_photo(self):
+        # Tries to display the photo
         try:
+            # Opens the photosphere
             photosphere = Image.open(self.photosphere_path)
+            # Opens the nadir
             nad = Image.open(self.nadir_path)
+            # Resizes the nadir to the dimensions of the photosphere
             nad = nad.resize(photosphere.size,resample=0)
+            # Pastes the nadir onto the photosphere at (0,0)
             photosphere.paste(nad,(0,0),nad)
+            # Displays the photosphere
             photosphere.show()
-            
+
+        # Checks if the image cannot be displayed due to a ValueError
         except ValueError:
-            if imghdr.what(self.photosphere_path) != 'jpeg':    # Checks to see if the problem is that the Photosphere is not a jpeg
+            # Checks to see if the problem is that the photosphere is not a jpeg
+            if imghdr.what(self.photosphere_path) != 'jpeg':
                 Error_Message(1)
-            else:                                               # If the Photosphere is a jpeg it means that the nadir was the problem
+            # If the photosphere is a jpeg, the nadir must be the problem
+            else:
                 Error_Message(0)
-        except:                                                 # The Photosphere and Nadir have not been selected          
+        # The photosphere and nadir have not been selected
+        except:                                                          
             Error_Message(1)
             
     def resize_and_patch(self):
+        # Tries to resize the nadir and paste it onto the photosphere
         try:
+            # Opens the nadir
             self.nadir = Image.open(self.nadir_path)
+            # Opens the photosphere
             self.photosphere = Image.open(self.photosphere_path)
+            # Resizes the nadir to the dimensions of the photosphere
             self.nadir = self.nadir.resize(self.photosphere.size, resample=0)
+            # Pastes the nadir onto the photosphere
             self.photosphere.paste(self.nadir,(0,0),self.nadir)
-        
+
+        # Checks if the image cannot be displayed due to a ValueError
         except ValueError:
-            if imghdr.what(self.photosphere_path) != 'jpeg':    # Checks to see if the problem is that the Photosphere is not a jpeg
+            # Checks to see if the problem is that the photosphere is not a jpeg
+            if imghdr.what(self.photosphere_path) != 'jpeg':
                 Error_Message(1)
-            else:                                               # If the Photosphere is a jpeg it means that the nadir was the problem
+            # If the photosphere is a jpeg, the nadir must be the problem
+            else:
                 Error_Message(0)
-        except:                                                 # The Photosphere and Nadir have not been selected          
+        # The photosphere and nadir have not been selected
+        except:                                                  
             Error_Message(1)
-            
-        try:            
+
+        # Tries to save the patched photosphere
+        try:
+            # Opens a selection box for the user to choose the name and save location of the finished photosphere
             self.save_destination = filedialog.asksaveasfilename(defaultextension = ".jpg")
+            # Saves the photosphere to the selected location
             self.photosphere.save(self.save_destination)
+            # Displays a pop-up box informing the user that the photosphere has been patched and saved
             messagebox.showinfo(title="Program complete.", message="The photosphere has been patched and saved.")
-        
-        except:                     # Sends an error message if the user exits the save tab before selecting a file to save to
+
+        # Sends an error message if the user exits the selection box before selecting a save location
+        except: 
             Error_Message(2)
-            
 
 class Error_Message(Toplevel):
     def __init__(self, message_num):
-        messages = ["Nadir is not a png file.","Photosphere is not a jpeg file.", "Both a Photosphere and a Nadir have to selected","Not a valid save location."]
+        # Creates a list of possible error messages
+        messages = ["Nadir is not a .png file. Please select a .png file to be used as the nadir.","Photosphere is not a .jpeg file. Please select a .jpeg file to be used as the photosphere.", "Please select both a photosphere and nadir.","Please select a valid save location."]
+        # Displays a pop-up box informing the user of the error
         self.error_message = messagebox.showinfo(title="Error", message=messages[message_num])
-        
+
+# Runs the GUI
 if __name__ == "__main__":
     root = Tk()
     root.title("Nadir Patch Tool")
