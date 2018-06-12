@@ -46,16 +46,15 @@ class Editor_360(ttk.Frame):
     def preview_photo(self):
         # Tries to display the photo
         try:
-            # Opens the photosphere
-            photosphere = Image.open(self.photosphere_path)
-            # Opens the nadir
-            nad = Image.open(self.nadir_path)
+            # Opens the photosphere and nadir
+            self.photosphere = Image.open(self.photosphere_path)
+            self.nad = Image.open(self.nadir_path)
             # Resizes the nadir to the dimensions of the photosphere
-            nad = nad.resize(photosphere.size,resample=0)
+            self.nad = self.nad.resize(self.photosphere.size,resample=0)
             # Pastes the nadir onto the photosphere at (0,0)
-            photosphere.paste(nad,(0,0),nad)
+            self.photosphere.paste(self.nad,(0,0),self.nad)
             # Displays the photosphere
-            photosphere.show()
+            self.photosphere.show()
 
         # Checks if the image cannot be displayed due to a ValueError
         except ValueError:
