@@ -25,11 +25,11 @@ class Editor_360(ttk.Frame):
         mainframe.rowconfigure(0, weight=1)
 
         # Creates the buttons and labels
-        ttk.Button(mainframe, text='Choose the photosphere to be patched.', command=self.choose_photosphere).grid(column=0, row=1, padx=10, pady=10)
-        ttk.Button(mainframe, text='Choose the nadir to be used.', command=self.choose_nadir).grid(column=0, row=2, padx=10, pady=10)
-        ttk.Button(mainframe, text='Preview Edited Photosphere', command = self.preview_photo).grid(column=0, row=4,padx=10,pady=10)
+        ttk.Button(mainframe, text='Step 1: Choose the photosphere to be patched.', command=self.choose_photosphere).grid(column=0, row=1, padx=10, pady=10)
+        ttk.Button(mainframe, text='Step 2: Choose the nadir to be used.', command=self.choose_nadir).grid(column=0, row=2, padx=10, pady=10)
+        ttk.Button(mainframe, text='Step 3: Preview Edited Photosphere', command = self.preview_photo).grid(column=0, row=4,padx=10,pady=10)
         ttk.Button(mainframe, text='Quit.', command=exit).grid(column=0, row=6, padx=10, pady=10)
-        ttk.Button(mainframe, text='Patch photosphere.', command=self.resize_and_patch).grid(column=0, row=5, padx=10, pady=10)
+        ttk.Button(mainframe, text='Step 4: Patch photosphere.', command=self.resize_and_patch).grid(column=0, row=5, padx=10, pady=10)
         ttk.Label(mainframe, text='Nadir Patch Tool', font=("Arial", 20)).grid(column=0, row=0)
 
         # Allows the buttons and labels to be organized
