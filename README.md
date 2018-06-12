@@ -1,1 +1,1 @@
-# ICS4U-NadirPatchTool
+# ICS4U-NadirPatchTool: Python program that overlays a nadir image onto a photosphere to cover the distortions caused by the tripod 

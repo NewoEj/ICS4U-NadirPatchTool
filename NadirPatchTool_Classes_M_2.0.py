@@ -1,3 +1,19 @@
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#
+# Name: NadirPatchTool.py
+#
+# Purpose: This program solves a problem presented by a Virtual Tour company. When taking photospheres (360 degree photos), the bottom area becomes distorted due to the tripod
+#          being in the way. Virtual Tour companies solve this problem by manually adding a photo to the bottom of the photosphere to cover the distorted area. However, this
+#          process is extremely time consuming, and fairly difficult. This program automates this task, by simply prompting the user to select a photosphere and nadir to be
+#          used to cover the tripod, as well as the save location of the final photosphere. The user can also preview the final photosphere before saving it, in case they
+#          wish to change the nadir and/or photosphere.
+#
+# Authors: Dipietro.M and Johnstone.O
+#
+# Created: 03/04/2018
+#
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Imports necessary tkinter modules
 from tkinter import *
 from tkinter import ttk
@@ -107,7 +123,9 @@ class Editor_360(ttk.Frame):
 class Error_Message(Toplevel):
     def __init__(self, message_num):
         # Creates a list of possible error messages
-        messages = ["Nadir is not a .png file. Please select a .png file to be used as the nadir.","Photosphere is not a .jpeg file. Please select a .jpeg file to be used as the photosphere.", "Please select both a valid photosphere and nadir.","Please select a save location."]
+        messages = ["Nadir is not a .png file. Please select a .png file to be used as the nadir.",
+                    "Photosphere is not a .jpeg file. Please select a .jpeg file to be used as the photosphere.",
+                    "Please select both a valid photosphere and nadir.","Please select a save location."]
         # Displays a pop-up box informing the user of the error
         self.error_message = messagebox.showinfo(title="Error", message=messages[message_num])
 
