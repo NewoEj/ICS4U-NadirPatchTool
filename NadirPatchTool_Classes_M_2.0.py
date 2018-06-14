@@ -31,9 +31,6 @@ from PIL import ImageTk
 class Editor_360(ttk.Frame):
     
     def __init__(self, parent):
-        
-        self.photosphere = Image.Image._new
-        self.nadir = Image.Image._new
 
         # Creates the GUI
         mainframe = ttk.Frame(parent, padding="10")
@@ -94,6 +91,15 @@ class Editor_360(ttk.Frame):
             self.nadir = self.nadir.resize(self.photosphere.size, resample=0)
             # Pastes the nadir onto the photosphere at (0,0)
             self.photosphere.paste(self.nadir,(0,0),self.nadir)
+            
+            # Tries to save the patched photosphere
+        
+            # Opens a selection box for the user to choose the name and save location of the finished photosphere
+            self.save_destination = filedialog.asksaveasfilename(defaultextension = ".jpg")
+            # Saves the photosphere to the selected location
+            self.photosphere.save(self.save_destination)
+            # Displays a pop-up box informing the user that the photosphere has been patched and saved
+            messagebox.showinfo(title="Program complete.", message="The photosphere has been patched and saved.")            
 
         # Checks if the photosphere and nadir are the correct file format
         except OSError:
@@ -106,15 +112,6 @@ class Editor_360(ttk.Frame):
         # Checks if both a photosphere and nadir have been selected
         except AttributeError:
             Error_Message(2)
-
-        # Tries to save the patched photosphere
-        try:
-            # Opens a selection box for the user to choose the name and save location of the finished photosphere
-            self.save_destination = filedialog.asksaveasfilename(defaultextension = ".jpg")
-            # Saves the photosphere to the selected location
-            self.photosphere.save(self.save_destination)
-            # Displays a pop-up box informing the user that the photosphere has been patched and saved
-            messagebox.showinfo(title="Program complete.", message="The photosphere has been patched and saved.")
 
         # Sends an error message if the user exits the selection box before selecting a save location
         except: 
