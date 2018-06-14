@@ -75,17 +75,13 @@ class tkinter_edit(ttk.Frame):
           
 class Preview_360(Toplevel):
     def __init__(self, base_photo, nadir):
-        try:
-            self.base = base_photo.make_tkImage(1000,500)
-            self.nad = nadir.make_tkImage(1000,500)        
-            self.edit = Toplevel()
-            self.edit.title("Preview Photo")
-            self.editor = Canvas(self.edit,width = 1000, height = 500)
-            self.editor.pack(expand = 1, fill = BOTH)
-            self.i = self.editor.create_image(500, 250, image = self.base)
-            self.p = self.editor.create_image(500, 250, image = self.nad)
-        except:
-            Error_Message()
+        back_img = Image.open(base_photo)
+        nad = Image.open(nadir)
+        back_img.paste(nad,(0,0),nad)
+        tkimage = ImageTk.PhotoImage(back_img)
+        panel1 = Label(root,image = tkimage)
+        panel1.pack()
+        
         
             
 class Error_Message(Toplevel):
