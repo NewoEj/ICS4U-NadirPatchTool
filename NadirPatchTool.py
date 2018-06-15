@@ -69,17 +69,9 @@ class Editor_360(ttk.Frame):
             # Displays the photosphere
             self.photosphere.show()
 
-        # Checks if the photosphere and nadir are the correct file format
-        except OSError:
-            # Checks to see if the problem is that the photosphere is not a jpeg
-            if imghdr.what(self.photosphere_path) != 'jpeg':
-                Error_Message(1)
-            # If the photosphere is a jpeg, then the nadir must be the problem
-            elif imghdr.what(self.nadir_path) != 'png':
-                Error_Message(0)
         # Checks if both a photosphere and nadir have been selected
         except AttributeError:
-            Error_Message(2)
+            Error_Message(0)
             
     def resize_and_patch(self):
         # Tries to resize the nadir and paste it onto the photosphere
@@ -101,28 +93,18 @@ class Editor_360(ttk.Frame):
             # Displays a pop-up box informing the user that the photosphere has been patched and saved
             messagebox.showinfo(title="Program complete.", message="The photosphere has been patched and saved.")            
 
-        # Checks if the photosphere and nadir are the correct file format
-        except OSError:
-            # Checks to see if the problem is that the photosphere is not a jpeg
-            if imghdr.what(self.photosphere_path) != 'jpeg':
-                Error_Message(1)
-            # If the photosphere is a jpeg, then the nadir must be the problem
-            elif imghdr.what(self.nadir_path) != 'png':
-                Error_Message(0)
         # Checks if both a photosphere and nadir have been selected
         except AttributeError:
-            Error_Message(2)
+            Error_Message(0)
 
         # Sends an error message if the user exits the selection box before selecting a save location
         except: 
-            Error_Message(3)
+            Error_Message(1)
 
 class Error_Message(Toplevel):
     def __init__(self, message_num):
         # Creates a list of possible error messages
-        messages = ["Nadir is not a .png file. Please select a .png file to be used as the nadir.",
-                    "Photosphere is not a .jpeg file. Please select a .jpeg file to be used as the photosphere.",
-                    "Please select both a valid photosphere and nadir.","Please select a save location."]
+        messages = ["Please select both a valid photosphere and nadir.","Please select a save location."]
         # Displays a pop-up box informing the user of the error
         self.error_message = messagebox.showinfo(title="Error", message=messages[message_num])
 
